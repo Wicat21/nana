@@ -19,6 +19,7 @@ class ListCreate extends Component {
      
       var valueJSON = this.state.valueJSON
       if (!valueJSON){
+        alert("valuejson undefined volt")
         var valueJSON = [];
       }
       var save = valueJSON.concat(myArray)
