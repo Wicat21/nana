@@ -7,7 +7,21 @@ import {Scene, Router, Actions} from 'react-native-router-flux';
 class ListEdit extends Component {
   constructor(props) {
       super(props);
-      this.state ={title:this.props.editedTitle, text: this.props.editedText, i:this.props.i, valueJSON: this.props.valueJSON};
+      this.state ={title:this.props.editedTitle, 
+          text: this.props.editedText, 
+          i:this.props.i, 
+          selectedColor:this.props.selectedColor, 
+          valueJSON: this.props.valueJSON, 
+          bgColor: [
+            'maroon',
+            'skyblue',
+            'orange',
+            'lightseagreen',
+            'palegreen',
+            'palevioletred',
+            'rebeccapurple',
+            'teal',
+      ]};
 
   }
 
@@ -15,9 +29,9 @@ class ListEdit extends Component {
     try {
       var valueJSON = this.state.valueJSON
       this.state.valueJSON[this.state.i].title = this.state.title, 
-      this.state.valueJSON[this.state.i].text = this.state.text
+      this.state.valueJSON[this.state.i].text = this.state.text,
+      this.state.valueJSON[this.state.i].selectedColor = this.state.selectedColor
       const set = await AsyncStorage.setItem('myArray', JSON.stringify(valueJSON))
-      Alert.alert('You tapped the button!');
       Keyboard.dismiss();
     } catch (error) {
       console.log(error)
@@ -36,6 +50,13 @@ class ListEdit extends Component {
     }
   }
 
+  getRandomColor(){
+    var item = this.state.bgColor[Math.floor(Math.random()*this.state.bgColor.length)];
+    this.setState({
+      selectedColor: item,
+    })
+  }
+
   render(){
     return (
        <View>
@@ -45,6 +66,11 @@ class ListEdit extends Component {
             </TouchableOpacity>
         </View>
         <View style={styles.containerStyle}>
+            <View>
+              <TouchableOpacity onPress={()=>this.getRandomColor()}>
+                <View style={{height: 50, width: 40, backgroundColor: this.state.selectedColor}}/>
+              </TouchableOpacity>
+            </View>
             <TextInput
               autoCorrect={false}
               style={styles.inputStyle}
@@ -115,6 +141,7 @@ const styles = {
     marginLeft: 10,
     marginRight: 10,
     marginTop: 10,
+    flexDirection: 'row'
   },
   containerTextStyle: {
     height: 300,

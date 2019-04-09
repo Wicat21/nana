@@ -8,14 +8,22 @@ class ListCreate extends Component {
   constructor(props) {
       super(props);
       console.log(props)
-      this.state ={title:'', text: '', valueJSON:this.props.valueJSON};
+      this.state ={title:'', text: '', selectedColor:'skyblue',valueJSON:this.props.valueJSON, bgColor: [
+        'maroon',
+        'skyblue',
+        'orange',
+        'lightseagreen',
+        'palegreen',
+        'palevioletred',
+        'rebeccapurple',
+        'teal',
+      ]};
   }
 
   async storeData () {
     try {
-      const {title, text} = this.state;
-      const myArray = {title: title, text: text}
-     
+      const {title, text, selectedColor} = this.state;
+      const myArray = {title: title, text: text, selectedColor:selectedColor}
       var valueJSON = this.state.valueJSON
       console.log(valueJSON)
       if (!valueJSON){
@@ -45,6 +53,13 @@ class ListCreate extends Component {
       }
   }
 
+  getRandomColor(){
+    var item = this.state.bgColor[Math.floor(Math.random()*this.state.bgColor.length)];
+    this.setState({
+      selectedColor: item,
+    })
+  }
+
   render(){
     return (
       <View>
@@ -54,6 +69,11 @@ class ListCreate extends Component {
             </TouchableOpacity>
         </View>
         <View style={styles.containerStyle}>
+          <View>
+            <TouchableOpacity onPress={()=>this.getRandomColor()}>
+              <View style={{height: 50, width: 40, backgroundColor: this.state.selectedColor}}/>
+            </TouchableOpacity>
+          </View>
           <TextInput
             placeholder='Cím'
             autoCorrect={false}
@@ -75,7 +95,7 @@ class ListCreate extends Component {
             <Text style={styles.buttonText}> Create </Text>
           </TouchableOpacity>
         </View>     
-      </View>
+    </View>
     )
   }
 };
@@ -120,6 +140,7 @@ const styles = {
     marginLeft: 10,
     marginRight: 10,
     marginTop: 10,
+    flexDirection: 'row'
   },
   containerTextStyle: {
     height: 300,

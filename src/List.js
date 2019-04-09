@@ -6,16 +6,7 @@ import {Scene, Router, Actions} from 'react-native-router-flux';
 class List extends Component {
   constructor(props) {
       super(props);
-      this.state ={title:'', text: '', valueJSON: [], selectedColor: 'red', bgColor: [
-        'maroon',
-        'skyblue',
-        'orange',
-        'lightseagreen',
-        'palegreen',
-        'palevioletred',
-        'rebeccapurple',
-        'teal',
-      ]};
+      this.state ={title:'', text: '', selectedColor:'', valueJSON: []};
   }
   
   componentWillMount (){
@@ -36,13 +27,6 @@ class List extends Component {
       }
   }
 
-  getRandomColor(){
-  var item = this.state.bgColor[Math.floor(Math.random()*this.state.bgColor.length)];
-  this.setState({
-    selectedColor: item,
-  })
-}
-
   render(){
     return(
       <View>
@@ -60,9 +44,9 @@ class List extends Component {
               console.log(item)
             return (
               <View style={styles.listContainerStyle}>
-                <TouchableOpacity style={styles.boxStyle} onPress={()=>this.getRandomColor()}>
-                  <View style={{height: 50, width: 40, backgroundColor: this.state.selectedColor}}/>
-                </TouchableOpacity>
+                <View>
+                  <View style={{height: 50, width: 40, backgroundColor: item.selectedColor}}/>
+                </View>
                 <TouchableOpacity onPress={() => {Actions.listEdit({
                   editedTitle: item.title, 
                   editedText: item.text, 
