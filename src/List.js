@@ -50,7 +50,9 @@ class List extends Component {
                 <TouchableOpacity onPress={() => {Actions.listEdit({
                   editedTitle: item.title, 
                   editedText: item.text, 
-                  valueJSON: this.state.valueJSON, i:i})}}>
+                  valueJSON: this.state.valueJSON, 
+                  i:i,
+                  selectedColor: item.selectedColor})}}>
                   <View style={styles.itemStyle}>
                     <Text style={styles.titleStyle} numberOfLines={1}>
                       {item.title}
