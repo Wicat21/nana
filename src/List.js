@@ -1,12 +1,21 @@
 import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
+import {FlatList, StyleSheet, Text, ScrollView, View, TouchableOpacity, Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {Scene, Router, Actions} from 'react-native-router-flux';
 
 class List extends Component {
   constructor(props) {
       super(props);
-      this.state ={title:'', text: '', valueJSON: []};
+      this.state ={title:'', text: '', valueJSON: [], selectedColor: 'red', bgColor: [
+        'maroon',
+        'skyblue',
+        'orange',
+        'lightseagreen',
+        'palegreen',
+        'palevioletred',
+        'rebeccapurple',
+        'teal',
+      ]};
   }
   
   componentWillMount (){
@@ -27,25 +36,37 @@ class List extends Component {
       }
   }
 
+  getRandomColor(){
+  var item = this.state.bgColor[Math.floor(Math.random()*this.state.bgColor.length)];
+  this.setState({
+    selectedColor: item,
+  })
+}
 
   render(){
     return(
       <View>
-        <View style={styles.nextStyle}>
-          <TouchableOpacity onPress={() =>  Actions.listCreate({valueJSON: this.state.valueJSON})}>
-            <Text> ÚJ </Text>
+        <View style={styles.headerStyle}>
+          <View>
+            <Text style={styles.headerText}>Lista</Text>
+          </View>
+          <TouchableOpacity style={styles.buttonStyle}>
+            <Text style={styles.buttonText} onPress={() =>  Actions.listCreate({valueJSON: this.state.valueJSON})}> + </Text>
           </TouchableOpacity>
         </View>
-        <View>
+        <ScrollView>
           {this.state.valueJSON &&
             this.state.valueJSON.map((item, i) => {
               console.log(item)
             return (
-              <View style={styles.listStyle}>
-                  <View style={styles.boxStyle}>
-                    <View style={{height: 90, width: 50, backgroundColor: 'powderblue'}}/>
-                  </View>
-                   <TouchableOpacity onPress={() => { Actions.listEdit({editedTitle: item.title, editedText: item.text, valueJSON: this.state.valueJSON, i:i})}}>
+              <View style={styles.listContainerStyle}>
+                <TouchableOpacity style={styles.boxStyle} onPress={()=>this.getRandomColor()}>
+                  <View style={{height: 50, width: 40, backgroundColor: this.state.selectedColor}}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {Actions.listEdit({
+                  editedTitle: item.title, 
+                  editedText: item.text, 
+                  valueJSON: this.state.valueJSON, i:i})}}>
                   <View style={styles.itemStyle}>
                     <Text style={styles.titleStyle} numberOfLines={1}>
                       {item.title}
@@ -53,21 +74,12 @@ class List extends Component {
                     <Text style={styles.textStyle} numberOfLines={1}>
                       {item.text}
                     </Text>
-                  </View>                  
-               </TouchableOpacity>
+                  </View>  
+                </TouchableOpacity>
               </View>
             )
           })}
-        </View>
-        <View style={styles.listStyle}>
-          <View style={styles.boxStyle}>
-            <View style={{height: 90, width: 50, backgroundColor: 'powderblue'}} />
-          </View>
-          <View style={styles.itemStyle}>
-            <Text style={styles.titleStyle}>Na</Text>
-            <Text style={styles.textStyle}>Najhsdlfnskldfsdf</Text>
-          </View>
-        </View>
+        </ScrollView>
       </View>
     )
   }
@@ -75,7 +87,40 @@ class List extends Component {
 
 
 const styles = {
-  listStyle: {
+  headerStyle:{
+    backgroundColor: '#001c4f',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 5,
+    height: 60,
+    position: 'relative',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  headerText: {
+    fontSize: 20,
+    padding: 25,
+    color: 'white'
+  },
+    buttonStyle: {
+    position: 'relative',
+    backgroundColor: '#003ba8',
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 8,
+    left: -10
+  },
+  buttonText: {
+    fontSize: 20,
+    color: '#fff'
+  },
+  listContainerStyle: {
     borderWidth: 1,
     borderRadius: 2,
     borderColor: '#ddd',
@@ -84,62 +129,42 @@ const styles = {
     shadowOffset: {width: 50, height: 50},
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    elevation: 10,
+    elevation: 5,
     marginLeft: 5,
     marginRight: 5,
-    marginTop: 10,
+    marginTop: 5,
+    marginBottom: 5,
     paddingBottom: 10,
     padding: 5,
     backgroundColor: '#fff',
     flexDirection: 'row',
     position: 'relative',
-    alignItems: 'stretch',
-    height: 100
-  },
-  boxStyle: {
-    flex:1
+    alignItems: 'flex-start',
+    alignContent:'flex-start',
+    justifyContent: 'flex-start',
+    height: 60
   },
   itemStyle: {
-    flex: 5,
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: '#ddd',
-    marginLeft: 60,
+    flex: 7,
+    marginLeft: 5,
     marginRight: 5,
-    marginTop: 10,
-    marginBottom: 10,
     justifyContent: 'space-between',
     flexDirection: 'column',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
   },
   titleStyle: {
     paddingRight: 5,
     paddingLeft: 5,
     fontSize: 20,
     fontWeight: 'bold',
-    textShadowOffset: {width: 1,height: 1},
+    textShadowOffset: {width: 0.5 ,height: 0.5},
     textShadowColor: '#000',
-    textShadowRadius: 5,
+    textShadowRadius: 1,
   },
   textStyle: {
     paddingRight: 5,
     paddingLeft: 5,
     fontSize: 15,
-  },
-  nextStyle: {
-    borderWidth: 1,
-    borderRadius: 2,
-    borderColor: '#ddd',
-    borderBottomWidth: 0,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 1,
-    marginLeft: 5,
-    marginRight: 5,
-    marginTop: 10,
-    alignItems: 'flex-end'
   },
 };
 

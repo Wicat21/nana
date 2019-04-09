@@ -13,6 +13,7 @@ const RouterComponent = () => {
 						component={List} 
 						title="List"
 						initial
+						hideNavBar={true}
 					/>
 					<Scene 
 						key="listCreate" 

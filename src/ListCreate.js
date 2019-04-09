@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Alert, Keyboard, Platform, StyleSheet, Text, FlatList, View, TextInput, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { Card, CardItem, Button} from './common/';
 import {Scene, Router, Actions} from 'react-native-router-flux';
 
 
@@ -18,55 +17,83 @@ class ListCreate extends Component {
       const myArray = {title: title, text: text}
      
       var valueJSON = this.state.valueJSON
+      console.log(valueJSON)
       if (!valueJSON){
         alert("valuejson undefined volt")
         var valueJSON = [];
       }
       var save = valueJSON.concat(myArray)
       const set = await AsyncStorage.setItem('myArray', JSON.stringify(save))
-      Alert.alert('You tapped the button!');
       Keyboard.dismiss();
     } catch (error) {
       console.log(error)
     }
   }
 
+
+  async getData () {
+      try {
+        const get = await AsyncStorage.getItem('myArray')
+        if(get !== null) {
+          const valueJSON = JSON.parse(get)
+          this.setState({valueJSON:valueJSON})
+          console.log(valueJSON)
+          console.log(this.state.valueJSON)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+  }
+
   render(){
     return (
-      <Card>
-      <TouchableOpacity onPress={() =>  Actions.List()}>
-      <Text> Vissza </Text>
-      </TouchableOpacity>
-        <CardItem>
-          <View style={styles.containerStyle}>
-            <Text style={styles.labelStyle}>Title</Text>
-            <TextInput
-              autoCorrect={false}
-              style={styles.inputStyle}
-              value={this.state.title}
-              onChangeText={title=>this.setState({title})}
-            />
-          </View>
-        </CardItem>
-        <CardItem>
+      <View>
+        <View style={styles.headerStyle}>
+            <TouchableOpacity style={styles.buttonStyle} onPress={() =>  Actions.List()}>
+              <Text style={styles.buttonText}> Vissza </Text>
+            </TouchableOpacity>
+        </View>
+        <View style={styles.containerStyle}>
+          <TextInput
+            placeholder='Cím'
+            autoCorrect={false}
+            style={styles.inputStyle}
+            value={this.state.title}
+            onChangeText={title=>this.setState({title})}
+          />
+        </View>
+        <View style={styles.containerTextStyle}>
           <TextInput 
             style={{flex:1}}
             multiline={true}
             value={this.state.text}
             onChangeText={text=>this.setState({text})}
           />
-        </CardItem>
-        <CardItem>
-          <Button
-            onPress={()=>this.storeData()}
-          >Create</Button>
-        </CardItem>     
-      </Card>
+        </View>
+        <View style={styles.savebuttonStyle}>
+          <TouchableOpacity style={styles.buttonStyle} onPress={()=>this.storeData()}>
+            <Text style={styles.buttonText}> Create </Text>
+          </TouchableOpacity>
+        </View>     
+      </View>
     )
   }
 };
 
 const styles = {
+  headerStyle:{
+    backgroundColor: '#001c4f',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 5,
+    height: 60,
+    position: 'relative',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   inputStyle: {
     color: '#000',
     paddingRight: 5,
@@ -81,11 +108,56 @@ const styles = {
     flex: 2,
   },
   containerStyle: {
-    height: 100,
-    flex: 1,
-    flexDirection: 'row',
+    height: 60,
     alignItems: 'center',
-  }
+    borderBottomWidth: 1,
+    padding: 5,
+    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
+    borderColor: '#ddd',
+    position: 'relative',
+    alignItems: 'stretch',
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 10,
+  },
+  containerTextStyle: {
+    height: 300,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    padding: 5,
+    backgroundColor: '#fff',
+    justifyContent: 'flex-start',
+    borderColor: '#ddd',
+    position: 'relative',
+    alignItems: 'stretch',
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 10,
+  },
+  buttonStyle: {
+    marginLeft: 15,
+    marginRight: 5,
+    marginTop: 10,
+    marginBottom: 10,
+    position: 'relative',
+    backgroundColor: '#003ba8',
+    width: 100,
+    height: 40,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 8,
+    left: -10
+  },
+  savebuttonStyle: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff'
+  },
 };
 
 
